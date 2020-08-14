@@ -5,7 +5,6 @@ const User = require('../models/user');
 const Car = require('../models/car');
 
 exports.addOrder = async (req, res, next) => {
-  console.log(req);
   const { car, washrequest, washPlan, price } = req.body;
   const newOrder = new Order({
     car,
@@ -15,7 +14,6 @@ exports.addOrder = async (req, res, next) => {
     price,
     status: 'Pending',
   });
-  console.log(req.body);
   let user;
   try {
     user = await User.findById(req.userData.userId);
@@ -96,7 +94,6 @@ exports.getOrdersByIds = async (req, res, next) => {
     return next(error);
   }
   const ids = user.orders;
-  console.log(ids);
   let orders;
   try {
     orders = await Order.find({ _id: { $in: ids } })
@@ -107,7 +104,6 @@ exports.getOrdersByIds = async (req, res, next) => {
       })
       .populate({ path: 'customer', model: User, select: 'name' })
       .populate({ path: 'washer', model: User, select: 'name' });
-    console.log(orders);
   } catch (err) {
     const error = new HttpError(
       'Fetching orders failed, please try again later.',
